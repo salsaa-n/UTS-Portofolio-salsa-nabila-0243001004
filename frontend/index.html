@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio - Personal Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            indigo: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              300: '#a5b4fc',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+            },
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .hover-lift {
+        transition: all 0.3s ease;
+      }
+      .hover-lift:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+      .animate-fadeup {
+        opacity: 0;
+        transform: translateY(16px);
+        animation: fadeUp 0.6s ease-out forwards;
+      }
+      .animate-scale {
+        opacity: 0;
+        transform: scale(0.95);
+        animation: scaleIn 0.5s ease-out forwards;
+      }
+      .delay-1 { animation-delay: 0.1s; }
+      .delay-2 { animation-delay: 0.2s; }
+      .delay-3 { animation-delay: 0.3s; }
+    }
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes scaleIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body class="font-sans bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-200 transition-colors duration-300" id="app">
+
+  <!-- Navbar -->
+  <nav class="fixed w-full top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex-shrink-0 font-bold text-xl text-indigo-600 dark:text-indigo-400">Portfolio</div>
+        <div class="flex items-center gap-4">
+          <button @click="toggleDarkMode" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+            <svg v-if="!isDarkMode" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="hero" class="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white pt-16">
+    <div class="text-center px-6 animate-scale" v-if="profile.name">
+      <p class="text-xl md:text-2xl text-indigo-100 mb-2 animate-fadeup delay-1">HALLO, SAYA</p>
+      
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        {{ profile.name }}
+      </h1>
+      
+      <p class="max-w-xl mx-auto text-indigo-50 animate-fadeup delay-2 mb-8">
+        {{ profile.bio }}
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-4 mt-2 animate-fadeup delay-3">
+        <a href="#proyek" class="border-2 border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-indigo-600 transition-all">Lihat Proyek</a>
+        <a href="#kontak" class="border-2 border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-indigo-600 transition-all">Hubungi Saya</a>
+      </div>
+
+    </div>
+    <div v-else class="text-center text-white">Memuat Data Profil...</div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="keahlian" class="py-16 px-6 bg-slate-50 dark:bg-slate-800">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-12 animate-fadeup">Keahlian</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div v-for="skill in skills" class="bg-white dark:bg-slate-700 p-6 rounded-xl shadow hover-lift animate-fadeup">
+          <h3 class="font-bold text-lg mb-2">{{ skill.name }}</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">{{ skill.category }}</p>
+          <div class="w-full bg-slate-200 dark:bg-slate-600 rounded-full h-2.5">
+            <div class="bg-indigo-600 h-2.5 rounded-full transition-all duration-1000" :style="{ width: skill.level + '%' }"></div>
+          </div>
+          <span class="text-xs text-right block mt-1 font-medium">{{ skill.level }}%</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience Section -->
+  <section id="pengalaman" class="py-16 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-12 animate-fadeup">Pengalaman</h2>
+      <div class="space-y-6">
+        <div v-for="exp in experiences" class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow border-l-4 border-indigo-500 animate-fadeup">
+          <h3 class="font-bold text-xl text-indigo-600 dark:text-indigo-400">{{ exp.position }}</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">{{ exp.company }} • {{ exp.duration }}</p>
+          <p class="text-slate-700 dark:text-slate-300 leading-relaxed">{{ exp.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="proyek" class="py-16 px-6 bg-slate-50 dark:bg-slate-800">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-12 animate-fadeup">Proyek</h2>
+
+      <!-- Filter -->
+      <div class="flex flex-wrap justify-center gap-3 mb-10 animate-fadeup">
+        <button @click="filterCategory('Semua')" class="px-4 py-2 rounded-lg font-medium transition-all" :class="filterActive === 'Semua' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-700 hover:bg-indigo-100 dark:hover:bg-indigo-900'">Semua</button>
+        <button @click="filterCategory('Pengembangan Web')" class="px-4 py-2 rounded-lg font-medium transition-all" :class="filterActive === 'Pengembangan Web' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-700 hover:bg-indigo-100 dark:hover:bg-indigo-900'">Pengembangan Web</button>
+        <button @click="filterCategory('Desain & Sistem')" class="px-4 py-2 rounded-lg font-medium transition-all" :class="filterActive === 'Desain & Sistem' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-700 hover:bg-indigo-100 dark:hover:bg-indigo-900'">Desain & Sistem</button>
+      </div>
+
+      <!-- Grid Proyek -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div v-for="project in filteredProjects" class="bg-white dark:bg-slate-700 rounded-xl overflow-hidden shadow hover-lift animate-fadeup">
+          <div class="h-36 bg-indigo-500/20 flex items-center justify-center text-2xl font-bold text-indigo-600 dark:text-indigo-300" :class="{'bg-green-500/20 text-green-600': project.id === 1, 'bg-orange-500/20 text-orange-600': project.id === 2, 'bg-blue-500/20 text-blue-600': project.id === 3}">
+            {{ project.name }}
+          </div>
+          <div class="p-5">
+            <h3 class="font-bold text-xl mb-2">{{ project.name }}</h3>
+            <p class="text-slate-600 dark:text-slate-300 text-sm mb-3">{{ project.description }}</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">{{ project.tech_stack }}</p>
+            <div class="flex gap-4 text-sm">
+              <a :href="project.demo_url" target="_blank" class="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">Lihat Hasil</a>
+              
+              <!-- ✅ Sudah diperbaiki: Tombol hilang jika github_url kosong/# -->
+              <a v-if="project.github_url && project.github_url !== '#'" :href="project.github_url" target="_blank" class="text-indigo-600 dark:text-indigo-400 font-medium hover:underline flex items-center gap-1">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                Kode Sumber
+              </a>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ KONTAK SAYA + FORMULIR SESUAI GAMBAR -->
+  <section id="kontak" class="py-16 px-6 bg-indigo-600 text-white dark:bg-indigo-900">
+    <h2 class="text-3xl font-bold text-center mb-8 animate-fadeup">Kontak Saya</h2>
+    
+    <!-- Info Kontak (Email & WA) -->
+    <div class="max-w-md mx-auto mb-8 space-y-3 text-center text-lg animate-fadeup" v-if="profile.email">
+      <p>Email: {{ profile.email }}</p>
+      <p>WhatsApp: {{ profile.phone }}</p>
+    </div>
+
+    <!-- Formulir Pesan -->
+    <div class="max-w-lg mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-xl p-6 animate-fadeup">
+      <form @submit.prevent="kirimPesan" class="space-y-4">
+        <div>
+          <input 
+            type="text" 
+            v-model="form.nama" 
+            placeholder="Nama Anda" 
+            class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            required
+          >
+        </div>
+        <div>
+          <input 
+            type="email" 
+            v-model="form.email" 
+            placeholder="Email Anda" 
+            class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            required
+          >
+        </div>
+        <div>
+          <textarea 
+            v-model="form.pesan" 
+            rows="5" 
+            placeholder="Pesan Anda..." 
+            class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            required
+          ></textarea>
+        </div>
+        <div>
+          <button 
+            type="submit" 
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition-all"
+          >
+            Kirim Pesan
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-slate-100 dark:bg-slate-900 py-8 px-6">
+    <div class="max-w-6xl mx-auto text-center">
+      <div class="flex justify-center gap-4 mb-4">
+        <a :href="profile.instagram_url" target="_blank" class="text-slate-700 dark:text-slate-300 hover:text-pink-600 transition-colors">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.778-2.618 6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <a :href="profile.github_url" target="_blank" class="text-slate-700 dark:text-slate-300 hover:text-gray-800 transition-colors">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+      </div>
+
+      <div class="mb-4 space-x-4 text-sm">
+        <a href="#hero" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600">Beranda</a>
+        <a href="#proyek" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600">Proyek</a>
+        <a href="#kontak" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600">Kontak</a>
+      </div>
+
+      <p class="text-sm text-slate-500 dark:text-slate-500">
+        © 2026 Salsa Nabila. All Rights Reserved.
+      </p>
+    </div>
+  </footer>
+
+  <!-- ✅ SCRIPT LENGKAP & TIDAK GANDA -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script>
+    const { createApp, ref, computed, onMounted } = Vue;
+
+    createApp({
+      setup() {
+        const profile = ref({});
+        const skills = ref([]);
+        const experiences = ref([]);
+        const projects = ref([]);
+        const isDarkMode = ref(false);
+        const filterActive = ref('Semua');
+
+        // Data Formulir Pesan
+        const form = ref({
+          nama: '',
+          email: '',
+          pesan: ''
+        });
+
+        const filteredProjects = computed(() => {
+          if (filterActive.value === 'Semua') return projects.value;
+          return projects.value.filter(p => p.category === filterActive.value);
+        });
+
+        const filterCategory = (cat) => {
+          filterActive.value = cat;
+        };
+
+        const toggleDarkMode = () => {
+          isDarkMode.value = !isDarkMode.value;
+          if (isDarkMode.value) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('darkMode', 'true');
+          } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('darkMode', 'false');
+          }
+        };
+
+        // Fungsi Kirim Pesan
+        const kirimPesan = () => {
+          alert(`Terima kasih ${form.value.nama}! Pesan berhasil dikirim.`);
+          form.value.nama = '';
+          form.value.email = '';
+          form.value.pesan = '';
+        };
+
+        // Ambil Data API
+        const fetchData = async () => {
+          try {
+            const resProfile = await fetch('/api/profile');
+            profile.value = await resProfile.json();
+
+            const resSkills = await fetch('/api/skills');
+            skills.value = await resSkills.json();
+
+            const resExp = await fetch('/api/experiences');
+            experiences.value = await resExp.json();
+
+            const resProj = await fetch('/api/projects');
+            projects.value = await resProj.json();
+
+          } catch (err) {
+            console.error('Gagal memuat data:', err);
+          }
+        };
+
+        onMounted(() => {
+          if (localStorage.getItem('darkMode') === 'true') {
+            isDarkMode.value = true;
+            document.documentElement.classList.add('dark');
+          }
+          fetchData();
+        });
+
+        return { 
+          profile, 
+          skills, 
+          experiences, 
+          projects,
+          isDarkMode, 
+          toggleDarkMode, 
+          filterCategory, 
+          filteredProjects,
+          form,
+          kirimPesan
+        };
+      }
+    }).mount('#app');
+  </script>
+
+</body>
+</html>
