@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
     // Simpan ke database
     const newContact = await Contact.create({ name, email, message });
     
-    // Ini adalah "log" yang diminta di poin 13
+    
     console.log('Pesan baru diterima:', newContact.toJSON());
     
     res.status(201).json({ message: 'Pesan berhasil dikirim!' });
